@@ -1,0 +1,69 @@
+@startuml
+title Catalogue - Consulter, filtrer, rechercher, consulter détail
+
+actor "Utilisateur\n(non connecté)" as U
+participant "IHM\n(Console / Web)" as UI
+participant "Service Catalogue" as SC
+database "Base de données" as DB
+
+U -> UI : Ouvrir le catalogue
+activate UI
+
+UI -> SC : demanderListeFormations()
+activate SC
+SC -> DB : SELECT formations (+ catégories)
+activate DB
+DB --> SC : listeFormations
+deactivate DB
+SC --> UI : listeFormations
+deactivate SC
+
+opt Filtrer par catégorie
+  U -> UI : Choisir catégorie
+  UI -> SC : filtrerParCategorie(categorieId)
+  activate SC
+  SC -> DB : SELECT formations WHERE categorie_id=?
+  activate DB
+  DB --> SC : listeFiltrée
+  deactivate DB
+  SC --> UI : listeFiltrée
+  deactivate SC
+end
+
+opt Rechercher par mot-clé
+  U -> UI : Saisir mot-clé
+  UI -> SC : rechercher(motCle)
+  activate SC
+  SC -> DB : SELECT formations WHERE nom/description LIKE ?
+  activate DB
+  DB --> SC : listeTrouvée
+  deactivate DB
+  SC --> UI : listeTrouvée
+  deactivate SC
+end
+
+opt Filtrer par modalité (présentiel/distanciel)
+  U -> UI : Choisir modalité
+  UI -> SC : filtrerParModalite(modalite)
+  activate SC
+  SC -> DB : SELECT formations WHERE modalite=?
+  activate DB
+  DB --> SC : listeParModalite
+  deactivate DB
+  SC --> UI : listeParModalite
+  deactivate SC
+end
+
+U -> UI : Consulter le détail d'une formation
+UI -> SC : consulterDetail(formationId)
+activate SC
+SC -> DB : SELECT formation WHERE id=?
+activate DB
+DB --> SC : formation
+deactivate DB
+SC --> UI : formation
+deactivate SC
+
+UI --> U : Afficher résultat
+deactivate UI
+@enduml
