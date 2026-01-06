@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+
+actor "Visiteur\n(non connecté)" as VIS
+actor "Utilisateur\nconnecté" as AUTH
+VIS <|-- AUTH
+
+rectangle "Application de vente de formations" {
+
+  package "Catalogue" {
+    usecase "Consulter le catalogue" as UC_BROWSE
+    usecase "Afficher toutes les formations" as UC_LIST_ALL
+    usecase "Filtrer par catégorie" as UC_FILTER_CAT
+    usecase "Rechercher par mot-clé" as UC_SEARCH
+    usecase "Afficher les formations\nen présentiel" as UC_FILTER_ONSITE
+    usecase "Afficher les formations\nen distanciel" as UC_FILTER_REMOTE
+    usecase "Consulter le détail\nd'une formation" as UC_DETAIL
+  }
+
+  package "Panier" {
+    usecase "Gérer le panier" as UC_CART
+    usecase "Ajouter une formation\nau panier" as UC_ADD
+    usecase "Retirer une formation\ndu panier" as UC_REMOVE
+    usecase "Visualiser le panier" as UC_VIEW_CART
+    usecase "Passer commande" as UC_CHECKOUT
+  }
+
+  package "Compte" {
+    usecase "S'authentifier" as UC_LOGIN
+    usecase "Créer un compte utilisateur\n(login + mot de passe)" as UC_SIGNUP
+  }
+
+  package "Commande & clients" {
+    usecase "Saisir les informations\ndu client" as UC_CUSTOMER_INFO
+  }
+
+  ' --- Relations Catalogue ---
+  UC_BROWSE ..> UC_LIST_ALL : <<include>>
+  UC_FILTER_CAT ..> UC_LIST_ALL : <<extend>>
+  UC_SEARCH ..> UC_LIST_ALL : <<extend>>
+  UC_FILTER_ONSITE ..> UC_LIST_ALL : <<extend>>
+  UC_FILTER_REMOTE ..> UC_LIST_ALL : <<extend>>
+  UC_DETAIL ..> UC_LIST_ALL : <<extend>>
+
+  ' --- Relations Panier ---
+  UC_CART ..> UC_ADD : <<include>>
+  UC_CART ..> UC_REMOVE : <<include>>
+  UC_CART ..> UC_VIEW_CART : <<include>>
+
+  UC_CHECKOUT ..> UC_VIEW_CART : <<include>>
+  UC_CHECKOUT ..> UC_CUSTOMER_INFO : <<include>>
+
+  ' Si l'utilisateur n'est pas connecté, on déclenche le parcours compte
+  UC_LOGIN ..> UC_CHECKOUT : <<extend>>\n[si non connecté]
+  UC_SIGNUP ..> UC_LOGIN : <<extend>>\n[si pas de compte]
+}
+
+' --- Associations acteurs / cas d'utilisation ---
+VIS -- UC_BROWSE
+VIS -- UC_CART
+VIS -- UC_CHECKOUT
+
+AUTH -- UC_BROWSE
+AUTH -- UC_CART
+AUTH -- UC_CHECKOUT
+AUTH -- UC_LOGIN
+
+@enduml
