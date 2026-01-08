@@ -8,5 +8,5 @@ package fr.fms.trainingstore.dao;
  *
  */
 public interface CartDao {
-
+	//TOO DO
 }
