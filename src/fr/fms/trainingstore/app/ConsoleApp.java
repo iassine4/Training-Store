@@ -40,7 +40,10 @@ public class ConsoleApp {
         while (running) {
             printMenu();
             int choice = readInt("Votre choix : ");
-
+            if (choice < 0) {
+                System.out.println("Veuillez saisir un choix positif.");
+                continue;
+            }
             switch (choice) {
                 case 1 -> displayTrainings(catalogService.listTrainings());
                 case 2 -> handleFilterByCategory();
@@ -122,7 +125,7 @@ public class ConsoleApp {
             System.out.print(prompt);
             String line = scanner.nextLine();
             try {
-            	//converti la chaîne en int
+            	//convertit la chaîne en int
                 return Integer.parseInt(line.trim());
             } catch (NumberFormatException e) {
                 System.out.println("Veuillez saisir un nombre.");
