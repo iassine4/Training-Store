@@ -66,7 +66,7 @@ Panier "1" *-- "0..*" LignePanier
 LignePanier "1" --> "1" Formation
 
 Utilisateur "1" --> "0..*" Commande : passe
-Commande "1" *-- "1..*" LigneCommande
+Commande "1..*" *-- "1..*" LigneCommande
 LigneCommande "1" --> "1" Formation
 Commande "1" *-- "1" Client : pour
 
