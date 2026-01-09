@@ -3,6 +3,7 @@
  */
 package fr.fms.trainingstore.dao.jdbc;
 
+import fr.fms.trainingstore.config.ConnectionFactory;
 import fr.fms.trainingstore.dao.CartDao;
 import fr.fms.trainingstore.domain.Cart;
 
@@ -11,6 +12,8 @@ import fr.fms.trainingstore.domain.Cart;
  *
  */
 public class CartDaoJdbc implements CartDao {
+	
+	 private final ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
 
 	@Override
 	public Cart findOrCreateByUserId(int userId) {
